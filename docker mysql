@@ -10,3 +10,26 @@ docker exec -it mysql-cont /bin/bash
 mysql -uroot -proot
 use my_db;
 select * from student-data;
+----------------------------------------------------------------
+student-data.py
+import mysql.connector
+
+conn = mysql.connector.connect(user='root', database='my-db', host="mysql-cont", password="root")
+cursorA = conn.cursor(buffered=True)
+
+cursorA.execute("CREATE TABLE IF NOT EXISTS `student-data` (name VARCHAR(20), phone_no BIGINT)")
+
+cursorA.execute("INSERT INTO `student-data` VALUES ('OmS', 1238712345)")
+
+conn.commit()
+
+cursorA.close()
+conn.close()
+print("Data inserted successfully!")
+-----------------------------------------------
+Dockerfile
+FROM python:alpine
+WORKDIR /app
+COPY student-data.py /app 
+RUN pip install mysql-connector-python
+CMD ["python3","student-data.py"]
