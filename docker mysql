@@ -1,0 +1,12 @@
+mkdir && cd
+docker network create my-net
+nano student.py
+nano Dockerfile
+docker build -t python_img
+docker run -d --network my_network -p 3306:3306 --name mysql-cont -e MYSQL_ROOT_PASSWORD -e MYSQL_DATABASE=my_db mysql
+docker build -t python_img .
+docker run -d --network my-net python_img:network
+docker exec -it mysql-cont /bin/bash
+mysql -uroot -proot
+use my_db;
+select * from student-data;
